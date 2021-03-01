@@ -15,6 +15,6 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y libcurl4 screen expect
 WORKDIR /opt/bds
 COPY --from=extract /extract .
-COPY entrypoint.sh ./
+COPY entrypoint.sh app.sh ./
 RUN mkfifo input output
 ENTRYPOINT ["./entrypoint.sh"]

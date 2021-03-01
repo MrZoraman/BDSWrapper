@@ -1,9 +1,10 @@
 #!/bin/bash
 set -m
 
-# trap '{ echo "I want to stop" || true; exit 0; }' SIGTERM
+trap '{ echo "I have been hammered!"; }' SIGKILL
+trap '{ echo "I am not stopping"; echo "stop" > input; sleep 5; }' SIGTERM
 
-cat > input &
+./app.sh &
 pid=$!
-./bedrock_server < input && kill -2 $pid &
-fg %1 > /dev/null
+echo $pid
+wait $pid
