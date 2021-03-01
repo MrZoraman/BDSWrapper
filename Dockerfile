@@ -15,7 +15,7 @@ FROM ubuntu:20.04
 RUN apt-get update && apt-get install -y libcurl4
 WORKDIR /opt/bds
 COPY --from=extract /extract .
-COPY entrypoint.sh app.sh server.properties ./
+COPY entrypoint.sh app.sh server.properties bds.sh ./
 RUN mkfifo input
 EXPOSE 19132/udp
 ENV \
