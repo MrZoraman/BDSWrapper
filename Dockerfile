@@ -12,8 +12,9 @@ RUN unzip bedrock-server.zip
 RUN rm bedrock-server.zip
 
 FROM ubuntu:latest
-RUN apt-get update && apt-get install -y libcurl4 screen
+RUN apt-get update && apt-get install -y libcurl4 screen expect
 WORKDIR /opt/bds
 COPY --from=extract /extract .
 COPY entrypoint.sh stop_server.sh test.sh ./
+RUN mkfifo input output
 ENTRYPOINT ["./entrypoint.sh"]
