@@ -17,4 +17,5 @@ WORKDIR /opt/bds
 COPY --from=extract /extract .
 COPY entrypoint.sh app.sh ./
 RUN mkfifo input output
+EXPOSE 19132/udp
 ENTRYPOINT ["./entrypoint.sh"]
