@@ -1,28 +1,35 @@
 #!/bin/bash
 set -m
 
-sed -i "s/{{BDS_SERVER_NAME}}/$BDS_SERVER_NAME/" server.properties
-sed -i "s/{{BDS_GAMEMODE}}/$BDS_GAMEMODE/" server.properties
-sed -i "s/{{BDS_DIFFICULTY}}/$BDS_DIFFICULTY/" server.properties
-sed -i "s/{{BDS_ALLOW_CHEATS}}/$BDS_ALLOW_CHEATS/" server.properties
-sed -i "s/{{BDS_MAX_PLAYERS}}/$BDS_MAX_PLAYERS/" server.properties
-sed -i "s/{{BDS_ONLINE_MODE}}/$BDS_ONLINE_MODE/" server.properties
-sed -i "s/{{BDS_WHITE_LIST}}/$BDS_WHITE_LIST/" server.properties
-sed -i "s/{{BDS_VIEW_DISTANCE}}/$BDS_VIEW_DISTANCE/" server.properties
-sed -i "s/{{BDS_TICK_DISTANCE}}/$BDS_TICK_DISTANCE/" server.properties
-sed -i "s/{{BDS_PLAYER_IDLE_TIMEOUT}}/$BDS_PLAYER_IDLE_TIMEOUT/" server.properties
-sed -i "s/{{BDS_MAX_THREADS}}/$BDS_MAX_THREADS/" server.properties
-sed -i "s/{{BDS_LEVEL_NAME}}/$BDS_LEVEL_NAME/" server.properties
-sed -i "s/{{BDS_LEVEL_SEED}}/$BDS_LEVEL_SEED/" server.properties
-sed -i "s/{{BDS_DEFAULT_PLAYER_PERMISSION_LEVEL}}/$BDS_DEFAULT_PLAYER_PERMISSION_LEVEL/" server.properties
-sed -i "s/{{BDS_TEXTUREPACK_REQUIRED}}/$BDS_TEXTUREPACK_REQUIRED/" server.properties
-sed -i "s/{{BDS_CONTENT_LOG_FILE_ENABLED}}/$BDS_CONTENT_LOG_FILE_ENABLED/" server.properties
-sed -i "s/{{BDS_COMPRESSION_THRESHOLD}}/$BDS_COMPRESSION_THRESHOLD/" server.properties
-sed -i "s/{{BDS_SERVER_AUTHORITATIVE_MOVEMENT}}/$BDS_SERVER_AUTHORITATIVE_MOVEMENT/" server.properties
-sed -i "s/{{BDS_PLAYER_MOVEMENT_SCORE_THRESHOLD}}/$BDS_PLAYER_MOVEMENT_SCORE_THRESHOLD/" server.properties
-sed -i "s/{{BDS_PLAYER_MOVEMENT_DISTANCE_THRESHOLD}}/$BDS_PLAYER_MOVEMENT_DISTANCE_THRESHOLD/" server.properties
-sed -i "s/{{BDS_PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS}}/$BDS_PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS/" server.properties
-sed -i "s/{{BDS_CORRECT_PLAYER_MOVEMENT}}/$BDS_CORRECT_PLAYER_MOVEMENT/" server.properties
+write_prop()
+{
+    prop_name=$1
+    echo "$1: ${!prop_name}"
+    sed -i "s/{{${prop_name}}}/${!prop_name}/" server.properties
+}
+
+write_prop BDS_SERVER_NAME
+write_prop BDS_GAMEMODE
+write_prop BDS_DIFFICULTY
+write_prop BDS_ALLOW_CHEATS
+write_prop BDS_MAX_PLAYERS
+write_prop BDS_ONLINE_MODE
+write_prop BDS_WHITE_LIST
+write_prop BDS_VIEW_DISTANCE
+write_prop BDS_TICK_DISTANCE
+write_prop BDS_PLAYER_IDLE_TIMEOUT
+write_prop BDS_MAX_THREADS
+write_prop BDS_LEVEL_NAME
+write_prop BDS_LEVEL_SEED
+write_prop BDS_DEFAULT_PLAYER_PERMISSION_LEVEL
+write_prop BDS_TEXTUREPACK_REQUIRED
+write_prop BDS_CONTENT_LOG_FILE_ENABLED
+write_prop BDS_COMPRESSION_THRESHOLD
+write_prop BDS_SERVER_AUTHORITATIVE_MOVEMENT
+write_prop BDS_PLAYER_MOVEMENT_SCORE_THRESHOLD
+write_prop BDS_PLAYER_MOVEMENT_DISTANCE_THRESHOLD
+write_prop BDS_PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS
+write_prop BDS_CORRECT_PLAYER_MOVEMENT
 
 ./app.sh &
 pid=$!
