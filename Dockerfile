@@ -16,6 +16,6 @@ RUN apt-get update && apt-get install -y libcurl4 screen expect
 WORKDIR /opt/bds
 COPY --from=extract /extract .
 COPY entrypoint.sh app.sh ./
-RUN mkfifo input output
+RUN mkfifo input
 EXPOSE 19132/udp
 ENTRYPOINT ["./entrypoint.sh"]
