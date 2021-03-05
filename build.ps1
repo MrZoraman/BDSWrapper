@@ -3,9 +3,9 @@ $ErrorActionPreference = "Stop"
 $NamesFile = "names.txt"
 
 $Version = Get-Content -Path VERSION
-$ImageName = "bds:$Version"
 
-docker build -t $ImageName .
+docker build -t "bds" .
+docker image tag "bds" "bds:$Version"
 
 if (Test-Path -Path $NamesFile -PathType leaf)
 {
@@ -13,6 +13,6 @@ if (Test-Path -Path $NamesFile -PathType leaf)
     ForEach ($name in $names)
     {
         $imageName = ($name + ':' + $Version)
-        docker image tag $ImageName ($name + ':' + $Version)
+        docker image tag "bds" ($name + ':' + $Version)
     }
 }
