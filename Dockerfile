@@ -15,8 +15,12 @@ FROM ubuntu:20.04
 RUN apt-get update && apt-get install -y libcurl4
 WORKDIR /opt/bds
 COPY --from=extract /extract .
-COPY entrypoint.sh app.sh server.properties.default bds.sh ./
+COPY entrypoint.sh app.sh bds.sh ./
+RUN mkdir /opt/bds/config
+COPY server.properties /opt/bds/config/server.properties
+RUN rm server.properties
+RUN ln --symbolic /opt/bds/config/server.properties server.properties
 RUN mkfifo input
 EXPOSE 19132/udp
-VOLUME [ "worlds", "server.properties" ]
+VOLUME [ "/opt/bds/worlds", "/opt/bds/config" ]
 ENTRYPOINT ["./entrypoint.sh"]
