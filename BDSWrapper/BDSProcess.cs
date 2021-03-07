@@ -40,13 +40,13 @@ namespace BDSWrapper
             {
                 StartInfo =
                 {
-                    FileName = "bds/bedrock_server",
+                    FileName = "bds2/bedrock_server.exe",
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
                 },
             };
 
-            _process.StartInfo.EnvironmentVariables["LD_LIBRARY_PATH"] = ".";
+            // _process.StartInfo.EnvironmentVariables["LD_LIBRARY_PATH"] = ".";
 
             _process.Exited += (_, _) => _cancelSource.Cancel();
             _consoleInputReader = consoleInputReader;
@@ -61,7 +61,10 @@ namespace BDSWrapper
 
         public async Task RunAsync()
         {
-            _process.Start();
+            new Thread(() => _process.Start()).Start();
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            // _process.Start();
 
             _processOutputReader =
                 new ThreadedStreamReader(_process.StandardOutput, "Process output reader");
