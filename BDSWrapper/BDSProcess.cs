@@ -40,11 +40,13 @@ namespace BDSWrapper
             {
                 StartInfo =
                 {
-                    FileName = "bds\\bedrock_server.exe",
+                    FileName = "bds/bedrock_server",
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
                 },
             };
+
+            _process.StartInfo.EnvironmentVariables["LD_LIBRARY_PATH"] = ".";
 
             _process.Exited += (_, _) => _cancelSource.Cancel();
             _consoleInputReader = consoleInputReader;
@@ -57,7 +59,7 @@ namespace BDSWrapper
             _process.Dispose();
         }
 
-        public Task StartAsync()
+        public async Task RunAsync()
         {
             _process.Start();
 
@@ -65,10 +67,12 @@ namespace BDSWrapper
                 new ThreadedStreamReader(_process.StandardOutput, "Process output reader");
             _processOutputReader.Start();
 
-            return Task.WhenAll(
+            await Task.WhenAll(
                 _process.WaitForExitAsync(),
                 SendInputToProcessAsync(),
                 ReadOutputAsync());
+
+            Log.Debug("RunAsync has finished. Has exited: {status}", _process.HasExited);
         }
 
         public void RequestStop()
