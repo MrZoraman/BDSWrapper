@@ -16,18 +16,79 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Threading;
+
 namespace BDSWrapper
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Serilog;
 
     /// <summary>
     ///     Contains the entry point for the program.
     /// </summary>
     internal class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .MinimumLevel.Debug()
+                .CreateLogger();
+
+            var consoleInputReader = new ThreadedStreamReader(Console.In, "Console input reader");
+            consoleInputReader.Start();
+            using var process = new BDSProcess(consoleInputReader);
+
+            await process.StartAsync();
+
+            // using var process = new Process
+            // {
+            //     StartInfo =
+            //     {
+            //         FileName = "bds\\bedrock_server.exe",
+            //         RedirectStandardOutput = true,
+            //         RedirectStandardInput = true,
+            //     },
+            // };
+            //
+            // Log.Debug("Process allocated.");
+            //
+            // process.Start();
+            // Log.Debug("Process started.");
+            //
+            // var runTask = process.WaitForExitAsync();
+            // var writeTask = WriteStreamToLogAsync(process.StandardOutput);
+            // var inputTask = ReadFromConsoleAsync(process, process.StandardInput);
+            //
+            // Log.Debug("Tasks created. Delaying...");
+            //
+            // await Task.Delay(TimeSpan.FromSeconds(5));
+            // Log.Information("sending stop command.");
+            // await process.StandardInput.WriteLineAsync("stop");
+            //
+            // await Task.WhenAll(runTask, writeTask, inputTask);
+        }
+
+        private static async Task ReadFromConsoleAsync(Process process, StreamWriter writer)
+        {
+            while (!process.HasExited)
+            {
+                var input = await Console.In.ReadLineAsync();
+                await writer.WriteLineAsync(input);
+            }
+        }
+
+        private static async Task WriteStreamToLogAsync(StreamReader reader)
+        {
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                Log.Warning(line);
+            }
         }
     }
 }
