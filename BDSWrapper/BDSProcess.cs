@@ -61,7 +61,9 @@ namespace BDSWrapper
 
         public async Task RunAsync()
         {
-            new Thread(() => _process.Start()).Start();
+            var t = new Thread(() => _process.Start());
+            t.IsBackground = true;
+            t.Start();
 
             await Task.Delay(TimeSpan.FromSeconds(1));
             // _process.Start();

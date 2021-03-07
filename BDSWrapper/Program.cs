@@ -48,6 +48,11 @@ namespace BDSWrapper
                 .MinimumLevel.Debug()
                 .CreateLogger();
 
+            Console.CancelKeyPress += (sender, eventArgs) =>
+            {
+                eventArgs.Cancel = true;
+            };
+
             var consoleInputReader = new ThreadedStreamReader(Console.In, "Console input reader");
             consoleInputReader.Start();
             using var program = new Program(consoleInputReader);
